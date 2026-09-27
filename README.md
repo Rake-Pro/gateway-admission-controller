@@ -21,26 +21,41 @@ the `upstream` git remote. All credit for the webhook design and code goes to th
 - semver tags `vX.Y.Z` only; the fork line starts at `v4.0.0`, above upstream's last tag `v3.12.0`
 - never push upstream tags to origin (`remote.upstream.tagOpt --no-tags` is set locally)
 
+*Using this image with the upstream Helm chart*
+
+There is no separate chart in this repo. Deploy with angelnu's `pod-gateway` chart (it bundles this
+webhook as the `webhook` controller) and point it at this fork's image:
+
+```bash
+helm repo add angelnu https://angelnu.github.io/helm-charts
+```
+
+```yaml
+# values.yaml
+controllers:
+  webhook:
+    containers:
+      main:
+        image:
+          repository: ghcr.io/rake-pro/gateway-admission-controller
+          tag: "v4.x.x" # pin to a released tag of this fork
+```
+
+See [pod-gateway](https://github.com/Rake-Pro/pod-gateway) for the matching override for the gateway
+image.
+
 ---
 
-# gateway admision controller
+# gateway admission controller
 
 Originally based on the [k8s-at-home container template](https://github.com/k8s-at-home/template-container-image)
 and the [example for Kubewebhook](https://github.com/slok/k8s-webhook-example/), this
-[admision webhook](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/)
+[admission webhook](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/)
 changes the default gateway and, optionally, the DNS of processed pods. It does so by adding an
 init container and a sidecar. The sidecar is used in case the IP of the gateway changes.
 
 This is useful in order to send traffic to a VPN forwarder, traffic scanner, etc instead of using the
 default cluster egress.
-
-The [.github](.github) folder will get PRs from this template so you can apply the latest workflows.
-
-## Prereqs
-
-You need to create the following secrets:
-- GHCR_USERNAME            # Needed to upload container to the Github Container Registry
-- GHCR_TOKEN               # Needed to upload container to the Github Container Registry
 
 ## How to build
 
@@ -53,7 +68,7 @@ You need to create the following secrets:
     make docker-build
     ```
 
-Check the [Makefile] for other build targets
+Check the [Makefile](Makefile) for other build targets.
 
 ## How to run
 
