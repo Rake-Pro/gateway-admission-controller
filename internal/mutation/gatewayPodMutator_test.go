@@ -72,6 +72,15 @@ func getExpectedPodSpec_gateway_withinit(gateway string, DNS string, initImage s
 			k8s_DNS_config.Search[i] = strings.Join(searchParts, ".")
 		}
 	}
+	// Mirror the mutator, which drops empty and "." search entries (a host
+	// resolv.conf with "search ." made this test environment-dependent).
+	searches := k8s_DNS_config.Search[:0]
+	for _, s := range k8s_DNS_config.Search {
+		if s != "" && s != "." {
+			searches = append(searches, s)
+		}
+	}
+	k8s_DNS_config.Search = searches
 
 	var initContainers []corev1.Container
 	var initContainerRunAsUser = int64(0) // Run init container as root
