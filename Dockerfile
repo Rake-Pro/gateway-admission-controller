@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 # Build (vendored modules, tests run as part of the image build)
-FROM golang:1.27.1-alpine AS build
+FROM golang:1.27.2-alpine AS build
 
 ARG TAG
 
