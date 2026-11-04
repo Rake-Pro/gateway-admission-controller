@@ -2,14 +2,18 @@ module github.com/angelnu/gateway-admision-controller
 
 go 1.27.3
 
+// No Multipath TCP listeners: nothing on the fleet dials MPTCP, and a listening
+// MPTCP socket was the precondition of the CVE-2026-98432 host-kernel exploit.
+godebug multipathtcp=0
+
 require (
 	github.com/alecthomas/kingpin/v2 v2.4.0
 	github.com/oklog/run v1.2.0
 	github.com/sirupsen/logrus v1.10.2
 	github.com/slok/kubewebhook/v2 v2.7.0
 	github.com/stretchr/testify v1.12.1
-	k8s.io/api v0.37.1
-	k8s.io/apimachinery v0.37.1
+	k8s.io/api v0.37.2
+	k8s.io/apimachinery v0.37.2
 )
 
 require (

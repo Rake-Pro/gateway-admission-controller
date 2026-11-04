@@ -10,7 +10,7 @@ RUN CGO_ENABLED=0 go build -mod=vendor -trimpath -ldflags "-s -w" -o /out/app ./
 RUN CGO_ENABLED=0 go test -mod=vendor ./...
 
 # Runtime
-FROM alpine:3.24.2
+FROM alpine:3.24.3
 
 # Pull distro security fixes newer than the tagged base.
 RUN apk upgrade --no-cache
